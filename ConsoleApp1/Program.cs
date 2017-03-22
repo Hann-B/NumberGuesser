@@ -10,45 +10,61 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Random rnd = new Random();
-            int targetNumber = rnd.Next(100) + 1;
-            int userGuess = 0;
+            var targetNumber = new Random().Next(1, 101);
+            //int targetNumber = rnd.Next(100) + 1;
+            var pastGuesses = new int[5];
             int guessCount = 0;
-            int[] pastGuessesArray = new int[5];
+            int userGuess = 0;
 
             Console.WriteLine("You have 5 guesses to get the right number!");
             Console.WriteLine("Guess a number between 1 and 100");
 
             while (userGuess != targetNumber && guessCount < 5)
             {
-                pastGuessesArray[guessCount] = userGuess;
                 int.TryParse(Console.ReadLine(), out userGuess);
 
-                if (userGuess < targetNumber)
+                var wasAlreadyGuess = false;
+                foreach(var guess in pastGuesses)
                 {
-                    guessCount++;
+                    if (guess == userGuess)
+                    {
+                        wasAlreadyGuess = true;
+                    }
+                }
+                if (wasAlreadyGuess)
+                {
+                    Console.WriteLine("You already guessed that, fool");
+                }
+                pastGuesses[guessCount] = userGuess;
+
+                if (userGuess < targetNumber && guessCount < 4)
+                { 
                     Console.WriteLine($"The number I am thinking of is higher than {userGuess}, Try again");
                 }
-                else if (userGuess > targetNumber)
+                else if (userGuess > targetNumber && guessCount < 4)
                 {
-                    guessCount++;
                     Console.WriteLine($"The number I am thinking of is lower than {userGuess}, Try again");
                 }
-                else if (guessCount == 4)
-                {
-                    //guessCount++;
-                    Console.WriteLine("You Lose, Whomp Whomp.");
-                }
-                else
-                {
-                    Console.WriteLine("Great job! You guessed right!");
-                }
+                guessCount++;
+                Console.WriteLine("Here are you previous guesses: ");
             }
-            for (int i = 0; i < 5; i++)
+                foreach (int guess in pastGuesses)
+                {
+                    if (guess != 0)
+                    {
+                        Console.Write($"{guess},");
+                    }
+                }
+            if (guessCount > 4)
             {
-                Console.WriteLine($"Your guesses this game have been {pastGuessesArray}");
+                Console.WriteLine("You Lose, Whomp Whomp.");
+            }
+            else
+            {
+                Console.WriteLine("Great job! You guessed right!");
             }
         }
+
     }
 }
 
